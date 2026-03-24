@@ -5,7 +5,6 @@
 
 #include "IDirect3DDevice9.h"
 
-#include <intrin.h>
 
 HRESULT APIENTRY hkIDirect3DDevice9::QueryInterface(REFIID riid, void** ppvObj) {
 	spdlog::trace(__FUNCTION__);
@@ -114,20 +113,11 @@ BOOL APIENTRY hkIDirect3DDevice9::ShowCursor(BOOL bShow) {
 
 HRESULT APIENTRY hkIDirect3DDevice9::CreateAdditionalSwapChain(D3DPRESENT_PARAMETERS* pPresentationParameters, IDirect3DSwapChain9** pSwapChain) {
 	spdlog::info(__FUNCTION__);
-	context.ApplyPresentationParameters(pPresentationParameters);
 	return m_pWrapped->CreateAdditionalSwapChain(pPresentationParameters, pSwapChain);
 }
 
 HRESULT APIENTRY hkIDirect3DDevice9::GetSwapChain(UINT iSwapChain, IDirect3DSwapChain9** pSwapChain) {
 	spdlog::trace(__FUNCTION__);
-
-	// Steam Overlay crash fix
-	// Add some space, 16bytes should be more than enough
-	__nop();	__nop();	__nop();	__nop();
-	__nop();	__nop();	__nop();	__nop();
-	__nop();	__nop();	__nop();	__nop();
-	__nop();	__nop();	__nop();	__nop();
-
 	return m_pWrapped->GetSwapChain(iSwapChain, pSwapChain);
 }
 
@@ -138,7 +128,6 @@ UINT APIENTRY hkIDirect3DDevice9::GetNumberOfSwapChains() {
 
 HRESULT APIENTRY hkIDirect3DDevice9::Reset(D3DPRESENT_PARAMETERS* pPresentationParameters) {
 	spdlog::debug("hkIDirect3DDevice9::Reset");
-	context.ApplyPresentationParameters(pPresentationParameters);
 	return m_pWrapped->Reset(pPresentationParameters);
 }
 
@@ -188,8 +177,8 @@ HRESULT APIENTRY hkIDirect3DDevice9::CreateCubeTexture(UINT EdgeLength, UINT Lev
 }
 
 HRESULT APIENTRY hkIDirect3DDevice9::CreateVertexBuffer(UINT Length, DWORD Usage, DWORD FVF, D3DPOOL Pool, IDirect3DVertexBuffer9** ppVertexBuffer, HANDLE* pSharedHandle) {
-	spdlog::trace(__FUNCTION__" {} {} {} {} {} {}", Length, Usage, FVF, Pool, (void*)ppVertexBuffer, (void*)pSharedHandle);
-	return context.CreateVertexBuffer(m_pWrapped, Length, Usage, FVF, Pool, ppVertexBuffer, pSharedHandle);
+	spdlog::trace(__FUNCTION__);
+	return m_pWrapped->CreateVertexBuffer(Length, Usage, FVF, Pool, ppVertexBuffer, pSharedHandle);
 }
 
 HRESULT APIENTRY hkIDirect3DDevice9::CreateIndexBuffer(UINT Length, DWORD Usage, D3DFORMAT Format, D3DPOOL Pool, IDirect3DIndexBuffer9** ppIndexBuffer, HANDLE* pSharedHandle) {
@@ -434,7 +423,7 @@ HRESULT APIENTRY hkIDirect3DDevice9::GetCurrentTexturePalette(UINT* PaletteNumbe
 
 HRESULT APIENTRY hkIDirect3DDevice9::SetScissorRect(CONST RECT* pRect) {
 	spdlog::trace(__FUNCTION__);
-	return context.SetScissorRect(m_pWrapped, pRect);
+	return m_pWrapped->SetScissorRect(pRect);
 }
 
 HRESULT APIENTRY hkIDirect3DDevice9::GetScissorRect(RECT* pRect) {
@@ -474,7 +463,7 @@ HRESULT APIENTRY hkIDirect3DDevice9::DrawIndexedPrimitive(D3DPRIMITIVETYPE Primi
 
 HRESULT APIENTRY hkIDirect3DDevice9::DrawPrimitiveUP(D3DPRIMITIVETYPE PrimitiveType, UINT PrimitiveCount, CONST void* pVertexStreamZeroData, UINT VertexStreamZeroStride) {
 	spdlog::trace(__FUNCTION__);
-	return context.DrawPrimitiveUP(m_pWrapped, PrimitiveType, PrimitiveCount, pVertexStreamZeroData, VertexStreamZeroStride);
+	return m_pWrapped->DrawPrimitiveUP(PrimitiveType, PrimitiveCount, pVertexStreamZeroData, VertexStreamZeroStride);
 }
 
 HRESULT APIENTRY hkIDirect3DDevice9::DrawIndexedPrimitiveUP(D3DPRIMITIVETYPE PrimitiveType, UINT MinVertexIndex, UINT NumVertices, UINT PrimitiveCount, CONST void* pIndexData, D3DFORMAT IndexDataFormat, CONST void* pVertexStreamZeroData, UINT VertexStreamZeroStride) {

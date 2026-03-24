@@ -22,7 +22,7 @@
     <ProjectGuid>{6C397640-B1A0-4DEF-8657-0EB21DC2FEA5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>d3d9ex</RootNamespace>
-    <ProjectName>OneTweakNG</ProjectName>
+    <ProjectName>FF13Fix4GB</ProjectName>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -106,7 +106,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
-      <AdditionalDependencies>d3d9.lib;XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -144,7 +144,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
-      <AdditionalDependencies>d3d9.lib;XINPUT9_1_0.LIB;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -177,7 +177,6 @@
     <ClInclude Include="Settings.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="XInputManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AutoFix.cpp" />
@@ -204,11 +203,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="VertexFix.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="XInputManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />

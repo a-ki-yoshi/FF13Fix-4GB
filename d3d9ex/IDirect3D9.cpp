@@ -72,13 +72,7 @@ UINT APIENTRY hkIDirect3D9::GetAdapterCount() {
 
 HRESULT APIENTRY hkIDirect3D9::GetAdapterIdentifier(UINT Adapter, DWORD Flags, D3DADAPTER_IDENTIFIER9* pIdentifier) {
 	spdlog::info(__FUNCTION__);
-	HRESULT rt = m_pWrapped->GetAdapterIdentifier(Adapter, Flags, pIdentifier);
-	if (context.config.GetAdapterAdapter() && SUCCEEDED(rt) && pIdentifier)
-	{
-		pIdentifier->VendorId = context.config.GetAdapterVendorId();
-		pIdentifier->DeviceId = context.config.GetAdapterDeviceId();
-	}
-	return rt;
+	return m_pWrapped->GetAdapterIdentifier(Adapter, Flags, pIdentifier);
 }
 
 UINT APIENTRY hkIDirect3D9::GetAdapterModeCount(UINT Adapter, D3DFORMAT Format) {
@@ -98,7 +92,6 @@ HRESULT APIENTRY hkIDirect3D9::GetAdapterDisplayMode(UINT Adapter, D3DDISPLAYMOD
 
 HRESULT APIENTRY hkIDirect3D9::CheckDeviceType(UINT Adapter, D3DDEVTYPE DevType, D3DFORMAT AdapterFormat, D3DFORMAT BackBufferFormat, BOOL bWindowed) {
 	spdlog::trace(__FUNCTION__);
-	if (context.config.GetBorderlessForceWindowedMode()) bWindowed = TRUE;
 	return m_pWrapped->CheckDeviceType(Adapter, DevType, AdapterFormat, BackBufferFormat, bWindowed);
 }
 
@@ -169,30 +162,8 @@ HRESULT hkIDirect3D9::ApplyCreateDeviceFix(UINT Adapter, D3DDEVTYPE DeviceType, 
 {
 	spdlog::info(__FUNCTION__);
 
-	DWORD OriginalBehaviorFlags = BehaviorFlags;
-	std::string BehaviorFlagsString;
-	context.BehaviorFlagsToString(BehaviorFlags, &BehaviorFlagsString);
-
-	spdlog::info("BehaviorFlags: {:#08x} {}", BehaviorFlags, BehaviorFlagsString);
-
-	if (context.config.GetOptionsBehaviorFlags() > 0) {
-		BehaviorFlags = context.config.GetOptionsBehaviorFlags();
-		spdlog::info("Advanced Mode: BehaviorFlags set");
-	}
-	else {
-		context.ApplyBehaviorFlagsFix(&BehaviorFlags);
-	}
-
 	if (hFocusWindow == NULL)
 		hFocusWindow = pPresentationParameters->hDeviceWindow;
-
-	context.ApplyPresentationParameters(pPresentationParameters);
-
-	if (OriginalBehaviorFlags != BehaviorFlags) {
-		std::string BehaviorFlagsString;
-		context.BehaviorFlagsToString(BehaviorFlags, &BehaviorFlagsString);
-		spdlog::info("BehaviorFlags changed: {:#08x} {}", BehaviorFlags, BehaviorFlagsString);
-	}
 
 	T* device = nullptr;
 	HRESULT hr = S_FALSE;
@@ -214,7 +185,6 @@ HRESULT hkIDirect3D9::ApplyCreateDeviceFix(UINT Adapter, D3DDEVTYPE DeviceType, 
 	}
 	else {
 		*ppReturnedDeviceInterface = new hkIDirect3DDevice9(static_cast<IDirect3DDevice9Ex*>(device), is_ex);
-		context.OneTimeFix();
 	}
 
 	return hr;

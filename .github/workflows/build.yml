@@ -1,0 +1,44 @@
+name: Build
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v3
+
+      - name: Build
+        run: msbuild d3d9ex.sln /p:Configuration=Release /p:Platform=Win32
+
+      - name: Create release archive
+        run: |
+          mkdir artifact
+          copy Release\d3d9.dll artifact\d3d9.dll
+          copy Other\FF13Fix4GB.ini artifact\FF13Fix4GB.ini
+        shell: cmd
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: FF13Fix-4GB
+          path: artifact\
+
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            artifact/d3d9.dll
+            artifact/FF13Fix4GB.ini
