@@ -167,9 +167,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Context.h" />
     <ClInclude Include="Wrapper.h" />
     <ClInclude Include="IDirect3D9.h" />

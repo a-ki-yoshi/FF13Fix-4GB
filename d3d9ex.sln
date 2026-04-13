@@ -11,10 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{5DB3A8
 		Common\MemPatch.h = Common\MemPatch.h
 		Common\SimpleIni.h = Common\SimpleIni.h
 		Common\StringUtil.h = Common\StringUtil.h
-		Common\Timer.h = Common\Timer.h
 		Common\Types.h = Common\Types.h
 		Common\WinUtil.h = Common\WinUtil.h
-		Common\WinVer.h = Common\WinVer.h
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deps", "Deps", "{908757C5-6B19-44A6-9C35-1F913D016F6F}"
